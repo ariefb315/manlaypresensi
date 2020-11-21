@@ -187,5 +187,5 @@ def update_task(request, pk):
 ## return redirect('/') ini akan mengembalikan nilai ke halaman yang sama
 
 class Tugasharian_list(generics.ListCreateAPIView):
-    queryset = Ms_tugas_harian.objects.filter(nip_pimpinan__id=2)
+    queryset = Ms_tugas_harian.objects.all()
     serializer_class = TugasHarianSerializer
