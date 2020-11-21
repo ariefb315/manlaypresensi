@@ -1,0 +1,44 @@
+{% extends 'core\base.html' %}
+
+{% block content %}
+    <h3>Update Task</h3>
+    <form action="">
+        {% csrf_token %}
+        {{tugasform}}
+    </form>
+    {% comment %} <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    var formData = new FormData();
+    {% comment %} 
+    "#" menandakan memanggil id pada html 
+    'title' variable tempat menyimpan nilai
+    #title.val() mengambil nilai dari id title pada form html
+    'action', 'create-post' cara kerjanya sama seperti form action, 
+    processData dan contentType harus dimasukkan dalam fungsi .ajax
+
+    {% endcomment %}
+    {% comment %} $(document).on('click', '#submit', function(e){
+        formData.append('title', $('#title').val())
+        formData.append('description', $('#description').val())
+        formData.append('image', $('#image')[0].files[0])
+        formData.append('action', 'create-post')
+        formData.append('csrfmiddlewaretoke', '{{} csrf_token }}')
+        $.ajax({
+            type: 'POST',
+            url: '{% url "create-post" %}',
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+            enctype: 'multipart/form-data',
+            success: function(){
+                alert('the post has been created')
+            },
+            error: function(xhr, errmsg, err){
+                console.log(xhr.status + ":" + xhr.responseText)
+            }
+        })
+    })
+</script> {% endcomment %} 
+{% endblock content %}
+

@@ -1,0 +1,67 @@
+{%extends 'core\base.html'%}
+
+{% load static %}
+
+{% block content %}
+
+    <h1>Monitor tugas Pegawai</h1>
+    
+   
+    <form action="/" method='POST'>
+        {% csrf_token %}
+        <h3>Pimpinan :  <input type="hidden" name="nm_pimpinan" value={{pimpinan.nama}}>{{pimpinan.nama}}</h3>
+        <p></p>
+        <div class="input-group mb-3">
+                <label for="tgl_absensiid" class="col-sm-2">Tanggal</label>
+                <input type="date" class="form-control col-sm-2" name="tgl_absensi" id="tgl_absensiid"> 
+                <button class="btn btn-info" name="btn_cek_tgl"> cek tanggal</button>
+        </div>
+        {% for person in data_peg %} 
+        <p></p>    
+        <div class="tugas_pegawai">
+            <p>Nama Pegawai : <input type="hidden" name="nm_peg" value={{person.nama}}><strong>{{person.nama}}</strong></p>
+                
+                <table class="table" id="table_absensi">
+                        <thead class="table-primary">
+                            <tr>
+                                <td hidden>No</td>
+                                <td hidden>id absensi</td>
+                                <th scope="col">Tugas</th>
+                                <th scope="col">Disetujui</th>
+                                <th scope="col">Tambahan tugas</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        {% for pegawai in presensi  %}
+                        {% if person.nip == pegawai.nip.nip %}
+                            {% for i in tugas_harian %}
+                                
+                                {% if i.id_absensi.id == pegawai.id %}
+                                <tr>
+                                    <td class="row_id" hidden><input type="text" name="id" id='id_tugas' value="{{i.id}}"></td>
+                                    <td hidden><input type="text" name="id_absensi" id='absensi_id' value="{{i.id_absensi.id}}"></td>
+                                    <td><input type="hidden" name="tgs_harian" id='tgs_harian_id' value="" disabled>{{i.nm_tugas_harian}}</td>
+                                    <td><input type="checkbox" name="is_approve" id='is_approve_id' value="" {% if i.is_approved == True %}checked{% endif %}></td>
+                                    <td><input type="text" name="tambah_tugas" id="tambah_tugas_id" value="{% if i.ket_tugas == None %}   {% else %} {{i.ket_tugas}} {% endif %}"></td>
+                                    <td><input type="text" name="status_tugas" id="status_tugas_id"  value="{% if i.status == None %}   {% else %} {{i.status}} {% endif %}" disabled></td>
+                                    <td><a class="btn btn-warning js-post-data" href="{% url 'update_task' i.id %}">approve</a></td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        {% endfor %}
+                </table>
+               
+              
+        </div>
+            
+        {% endfor %}   
+        
+    </form>
+    <p>is_caches: {{is_caches}}</p>
+{% endblock %}
+
+{% block javascript %}
+    <script src="{%static 'js/main.js'%}"></script>
+{% endblock  %}

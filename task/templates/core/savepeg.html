@@ -1,0 +1,10 @@
+{% extends 'core\base.html' %}
+
+{% block content %}
+
+<p>{{msg}}</p>
+<form action="{% url 'save_peg' %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="submit">
+</form>
+{% endblock content %}
