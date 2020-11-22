@@ -1,0 +1,50 @@
+{%extends 'core\base.html'%}
+
+{% load static %}
+
+{% block content %}
+
+    <h1>Hukuman Pegawai</h1>
+    
+   <p>
+    <button type="button" class="btn btn-primary js-create-hukuman">
+        <span class="material-icons"></span> Buat hukuman
+    </button>
+   </p>
+    {% comment %} <form action="/" method='POST'>
+        {% csrf_token %} {% endcomment %}
+        <h3>Pimpinan :  <input type="hidden" name="nm_pimpinan" value={{pimpinan.nama}}>{{pimpinan.nama}}</h3>
+        <p></p>
+        {% comment %} <div class="input-group mb-3">
+                <label for="tgl_absensiid" class="col-sm-2">Tanggal</label>
+                <input type="date" class="form-control col-sm-2" name="tgl_absensi" id="tgl_absensiid"> 
+                <button class="btn btn-info" name="btn_cek_tgl"> cek tanggal</button>
+        </div> {% endcomment %}
+                
+        <table class="table" id="hukuman-table">
+                <thead class="table-primary">
+                    <tr>
+                        <th scope="col" class="text-center">No</th>
+                        <th scope="col" class="text-center">Nip</th>
+                        <th scope="col" class="text-center">Nama</th>
+                        <th scope="col" class="text-center">jenis_hukuman</th>
+                        <th scope="col" class="text-center">teguran</th>
+                    </tr>
+                </thead>
+               <tbody>
+                    {% include 'core\partial_daftar_hukuman.html' %}
+               </tbody>
+        </table>
+
+    <div class="modal fade" id="modal-hukuman">
+        <div class="modal-dialog">
+            <div class="modal-content"></div>
+        </div>
+    </div>            
+        
+    {% comment %} </form> {% endcomment %}
+{% endblock %}
+
+{% block javascript %}
+    <script src="{%static 'js/hukuman.js'%}"></script>
+{% endblock  %}

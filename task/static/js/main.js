@@ -4,7 +4,7 @@ $(document).ready(function (){
     // var formData = new FormData();
     
 
-    $("a").on('click', function(e){
+    $(".js-post-data").on('click', function(e){
         e.preventDefault();
         // formData.append('id_tgs', $('#id_tugas').val())
         var $row = $(this).closest("tr");

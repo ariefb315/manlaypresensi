@@ -1,0 +1,13 @@
+{% for pelanggaran in hukuman %}
+    <tr>
+        <td>{{forloop.counter}}</td>
+        <td>{{pelanggaran.nip.nip}}</td>
+        <td>{{pelanggaran.nip.nama}}</td>
+        <td>{{pelanggaran.get_jns_hukuman_display}}</td>
+        <td>{{pelanggaran.teguran}}</td>
+    </tr>
+{% empty%}
+    <tr>
+        <td colspan="5" class="text-center bg-warning">Belum ada hukuman</td>
+    </tr>
+{% endfor %}

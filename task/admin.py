@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Ms_Pegawai, Ms_tugas_harian, ijin_pindah_lokasi, Absensi
+from .models import Ms_Pegawai, Ms_tugas_harian, ijin_pindah_lokasi, Absensi, Hukuman
 
 class PegawaiAdmin(admin.ModelAdmin):
     list_display = ('nip', 'nama', 'nip_pimpinan', 'pangkat', 'nm_jabatan', 'unit_kerja', 'unor' )
@@ -18,4 +18,5 @@ admin.site.register(Ms_Pegawai, PegawaiAdmin)
 admin.site.register(Ms_tugas_harian, TugasharianAdmin)
 admin.site.register(Absensi, AbsensiAdmin)
 admin.site.register(ijin_pindah_lokasi, IjinAdmin)
+admin.site.register(Hukuman)
 

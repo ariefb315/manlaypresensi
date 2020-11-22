@@ -4,17 +4,21 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import generics, mixins
 from rest_framework.schemas.openapi import SchemaGenerator
-from .models import Ms_Pegawai, Absensi, ijin_pindah_lokasi, Ms_tugas_harian
+from rest_framework.decorators import api_view
+from rest_framework import status
+from .models import Ms_Pegawai, Absensi, ijin_pindah_lokasi, Ms_tugas_harian, Hukuman
 # from django.utils.six import BytesIO
 from .serializers import PegawaiSerializer
 import requests
 from django.core import serializers
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 import io
 import json
 from . import apitest
-from .forms import TugasharianForm, AbsensiForm
+from .forms import TugasharianForm, AbsensiForm, HukumanForm
 from django.contrib import messages
-from .serializers import PegawaiSerializer, TugasHarianSerializer
+from .serializers import PegawaiSerializer, TugasHarianSerializer, AbsensiSerializer
 
 def home(request):
     #34.199.13.26/api/pegawai
@@ -85,12 +89,12 @@ def home(request):
         # new_tugas.save(update_fields=['id_absensi', 'is_approved', 'ket_tugas', 'nip_pimpinan'])
             count+=1
     #cache API agar lebih cepat saat load data
-    if not is_caches:
-        ip_address = request.META.get('HTTP_X_FORWARDED_FOR', '')
-        response = requests.get('http://localhost:8080/api/pegawai/')
-        request.session['data_peg'] = response.json()
+    # if not is_caches:
+    #     ip_address = request.META.get('HTTP_X_FORWARDED_FOR', '')
+    #     response = requests.get('http://localhost:8080/api/pegawai/')
+    #     request.session['data_peg'] = response.json()
     
-    data_peg = request.session['data_peg']
+    # data_peg = request.session['data_peg']
     list_pegawai = []
     # for pegawai in data_peg:
     #     if pegawai['nip_pimpinan'] not None:
@@ -189,3 +193,51 @@ def update_task(request, pk):
 class Tugasharian_list(generics.ListCreateAPIView):
     queryset = Ms_tugas_harian.objects.all()
     serializer_class = TugasHarianSerializer
+    
+# @api_view(['GET', 'POST'])
+# def tugasharian_list(request):
+#     if request.method == 'GET':
+#         tgs_harian = Ms_tugas_harian.objects.all()
+#         tgs_serializer = TugasHarianSerializer(tgs_harian, many=True)
+#         return Response(tgs_serializer.data)
+
+#     elif request.method == 'POST':
+#         tgs_serializer = TugasHarianSerializer(data=request.data)
+#         if tgs_serializer.is_valid():
+#             tgs_serializer.save()
+#             return Response(tgs_serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(tgs_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class Absensi_list(generics.ListCreateAPIView):
+    queryset = Absensi.objects.all()
+    serializer_class = AbsensiSerializer
+
+def hukuman_list(request):
+    hukuman = Hukuman.objects.all()
+    return render(request, 'core/hukuman.html', {'hukuman':hukuman})
+
+
+def buat_hukuman(request):
+    data = dict()
+
+    if request.method == 'POST':
+        form = HukumanForm(request.POST)
+        if form.is_valid():
+            form.save()
+            data['form_is_valid'] = True
+            hukuman = Hukuman.objects.all()
+            data['html_daftar_hukuman'] = render_to_string('core/partial_daftar_hukuman.html',{
+                'hukuman':hukuman,
+            })
+        else:
+            data['form_is_valid'] = False
+    else:
+        form = HukumanForm()
+    
+    context = {'form': form}
+    data['html_form'] = render_to_string('core/partial_buat_hukuman.html',
+        context,
+        request=request,
+    )
+    return JsonResponse(data)

@@ -77,12 +77,12 @@ class Absensi(models.Model):
 
 
 class Ms_tugas_harian(models.Model):
-    id_absensi      = models.ForeignKey('Absensi', on_delete=models.CASCADE)
+    id_absensi      = models.ForeignKey(Absensi, on_delete=models.CASCADE)
     nm_tugas_harian = models.CharField(max_length=100)
     is_approved     = models.BooleanField(default=False)
     ket_tugas       = models.CharField(max_length=100, blank=True, null=True)
     status          = models.CharField(max_length=100, blank=True, null=True)
-    nip_pimpinan    = models.ForeignKey('Ms_Pegawai', on_delete=models.CASCADE)
+    nip_pimpinan    = models.ForeignKey(Ms_Pegawai, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.nm_tugas_harian
@@ -90,7 +90,7 @@ class Ms_tugas_harian(models.Model):
 
 
 class ijin_pindah_lokasi(models.Model):
-    id_absensi      = models.ForeignKey('Absensi', on_delete=models.CASCADE)
+    id_absensi      = models.ForeignKey(Absensi, on_delete=models.CASCADE)
     alasan          = models.CharField(max_length=70)
     lat_awal        = models.FloatField(null=True)
     long_awal       = models.FloatField(null=True)
@@ -102,5 +102,22 @@ class ijin_pindah_lokasi(models.Model):
     def __str__(self):
         return self.alasan
 
+class Hukuman(models.Model):
+    ringan = "rn"
+    sedang = "sd"
+    berat = "br"
+    pilihan_hukuman = [
+        (ringan, 'Ringan'),
+        (sedang, 'Sedang'),
+        (berat, 'Berat'),
+    ]
+    
+    nip = models.ForeignKey(Ms_Pegawai, on_delete=models.CASCADE)
+    nip_pimpinan = models.ForeignKey(Ms_Pegawai, related_name="pimpinan", on_delete=models.CASCADE)
+    jns_hukuman = models.CharField(max_length=50, choices=pilihan_hukuman, default=ringan,)
+    teguran = models.CharField(max_length=100)
 
+    def __str__(self):
+        return self.teguran
+    
 # Create your models here.
