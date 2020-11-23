@@ -68,6 +68,7 @@ class Absensi(models.Model):
     ket             = models.CharField(max_length=200, null=True)
     jam_masuk       = models.DateTimeField(null=True)
     jam_keluar      = models.DateTimeField(null=True)
+    selisih         = models.FloatField(null=True, blank=True)
     latitude        = models.FloatField(null=True)
     longitude       = models.FloatField(null=True)
     nm_lokasi       = models.CharField(max_length=75)

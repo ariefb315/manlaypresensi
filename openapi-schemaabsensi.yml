@@ -1,0 +1,165 @@
+openapi: 3.0.2
+info:
+  title: ''
+  version: ''
+paths:
+  /api/absensi/{id}/tugas_harian/:
+    get:
+      operationId: listMs_tugas_harians
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this ms_tugas_harian.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TugasHarian'
+          description: ''
+      tags:
+      - api
+    post:
+      operationId: createMs_tugas_harian
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this ms_tugas_harian.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TugasHarian'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TugasHarian'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TugasHarian'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TugasHarian'
+          description: ''
+      tags:
+      - api
+  /api/absensi/:
+    get:
+      operationId: listAbsensis
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Absensi'
+          description: ''
+      tags:
+      - api
+    post:
+      operationId: createAbsensi
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Absensi'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Absensi'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Absensi'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Absensi'
+          description: ''
+      tags:
+      - api
+components:
+  schemas:
+    TugasHarian:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        id_absensi:
+          type: integer
+        nm_tugas_harian:
+          type: string
+          maxLength: 100
+        is_approved:
+          type: boolean
+        ket_tugas:
+          type: string
+          nullable: true
+          maxLength: 100
+        status:
+          type: string
+          nullable: true
+          maxLength: 100
+        nip_pimpinan:
+          type: integer
+      required:
+      - id_absensi
+      - nm_tugas_harian
+      - nip_pimpinan
+    Absensi:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        nip:
+          type: integer
+        tgl:
+          type: string
+          format: date
+        ket:
+          type: string
+          nullable: true
+          maxLength: 200
+        jam_masuk:
+          type: string
+          format: date-time
+          nullable: true
+        jam_keluar:
+          type: string
+          format: date-time
+          nullable: true
+        selisih:
+          type: number
+          nullable: true
+        latitude:
+          type: number
+          nullable: true
+        longitude:
+          type: number
+          nullable: true
+        nm_lokasi:
+          type: string
+          maxLength: 75
+      required:
+      - nip
+      - tgl
+      - nm_lokasi

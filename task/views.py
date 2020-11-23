@@ -6,6 +6,11 @@ from rest_framework import generics, mixins
 from rest_framework.schemas.openapi import SchemaGenerator
 from rest_framework.decorators import api_view
 from rest_framework import status
+from rest_framework.schemas.openapi import AutoSchema
+
+import coreapi
+import coreschema
+
 from .models import Ms_Pegawai, Absensi, ijin_pindah_lokasi, Ms_tugas_harian, Hukuman
 # from django.utils.six import BytesIO
 from .serializers import PegawaiSerializer
@@ -19,6 +24,10 @@ from . import apitest
 from .forms import TugasharianForm, AbsensiForm, HukumanForm
 from django.contrib import messages
 from .serializers import PegawaiSerializer, TugasHarianSerializer, AbsensiSerializer
+
+import datetime
+
+
 
 def home(request):
     #34.199.13.26/api/pegawai
@@ -100,6 +109,23 @@ def home(request):
     #     if pegawai['nip_pimpinan'] not None:
     #         if pegawai['nip_pimpinan']['id'] == 2:
     #             list_pegawai = pegawai['nip_pimpinan']
+    pegawai = Ms_Pegawai.objects.all()
+    kelima = 432000
+    list_org_bermasalah = []
+    for orang in pegawai:
+        telat = Absensi.objects.filter(
+           nip__nama = orang.nama,
+           tgl__year = 2020, 
+        ).values_list('selisih', flat=True)
+        
+        jml_telat=sum(telat)
+        # jml_telat = datetime.timedelta(seconds=jml_telat)
+        # jml_telat = jml_telat - datetime.timedelta(microseconds=jml_telat.microseconds)
+        print(jml_telat)
+        if jml_telat > kelima:
+            list_org_bermasalah.append(orang)
+    messages.warning(request, "Ada pegawai yang melanggar aturan!")
+    print(list_org_bermasalah)
 
     pimpinan = Ms_Pegawai.objects.get(nip='199510102010121001')
     presensi = Absensi.objects.all()
@@ -154,13 +180,25 @@ def save_pegawai(request):
 
 
 def tugas(request):
-
-    tugasform = TugasharianForm()
-    absensiform = AbsensiForm
-
+    pegawai = Ms_Pegawai.objects.all()
+    kelima = 432000
+    list_org_bermasalah = []
+    for orang in pegawai:
+        telat = Absensi.objects.filter(
+           nip__nama = orang.nama,
+           tgl__year = 2020, 
+        ).values_list('selisih', flat=True)
+        
+        jml_telat=sum(telat)
+        # jml_telat = datetime.timedelta(seconds=jml_telat)
+        # jml_telat = jml_telat - datetime.timedelta(microseconds=jml_telat.microseconds)
+        print(jml_telat)
+        if jml_telat > kelima:
+            list_org_bermasalah.append(orang)
+    messages.warning(request, "Ada pegawai yang melanggar aturan!")
+    print(list_org_bermasalah)
     context = {
-        'tugasform':tugasform,
-        'absensiform':absensiform
+       
     }
     return render(request, 'core/tugas.html', context)
 
@@ -190,9 +228,24 @@ def update_task(request, pk):
 # Create your views here.
 ## return redirect('/') ini akan mengembalikan nilai ke halaman yang sama
 
+
 class Tugasharian_list(generics.ListCreateAPIView):
     queryset = Ms_tugas_harian.objects.all()
     serializer_class = TugasHarianSerializer
+    schema = AutoSchema(
+        tags=['API Tugas Harian'],
+        component_name='tgs_harian',
+        operation_id_base='tgs_harian',
+    )
+    
+class Tugasharian_Detail(generics.RetrieveUpdateAPIView):
+    queryset = Ms_tugas_harian.objects.all()
+    serializer_class = TugasHarianSerializer
+    schema = AutoSchema(
+        tags=['API Tugas Harian Detail'],
+        component_name='tgs_harian_dtl',
+        operation_id_base='tgs_harian_dtl',
+    )
     
 # @api_view(['GET', 'POST'])
 # def tugasharian_list(request):
@@ -212,6 +265,21 @@ class Tugasharian_list(generics.ListCreateAPIView):
 class Absensi_list(generics.ListCreateAPIView):
     queryset = Absensi.objects.all()
     serializer_class = AbsensiSerializer
+    name="Daftar Absensi"
+    schema = AutoSchema(
+        tags=['API Daftar Absensi Pegawai'],
+        component_name='absensi_list',
+        operation_id_base='absensi_list',
+    )
+
+class Absensi_Detail(generics.RetrieveUpdateAPIView):
+    queryset = Absensi.objects.all()
+    serializer_class = AbsensiSerializer
+    schema = AutoSchema(
+        tags=['API Daftar Absensi Pegawai Detail'],
+        component_name='absensi_dtl',
+        operation_id_base='absensi_dtl',
+    )
 
 def hukuman_list(request):
     hukuman = Hukuman.objects.all()

@@ -6,4 +6,6 @@ $(document).ready(function() {
         $("span.badge-light").text(counter);
 
     });
+
 });
+

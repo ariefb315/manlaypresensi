@@ -19,7 +19,7 @@ class AbsensiSerializer(serializers.ModelSerializer):
     # tgs_harian = TugasHarianSerializer(many = True, read_only=False)
     class Meta:
         model = Absensi
-        fields = ('id', 'nip', 'tgl', 'ket', 'jam_masuk', 'jam_keluar', 'latitude', 'longitude', 'nm_lokasi')
+        fields = ('id', 'nip', 'tgl', 'ket', 'jam_masuk', 'jam_keluar','selisih', 'latitude', 'longitude', 'nm_lokasi')
 
 
 class HukumanSerializer(serializers.ModelSerializer):
